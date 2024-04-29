@@ -37,10 +37,23 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/employeesTax")
-	public ResponseEntity<List<Employee>> getAllEmployees() {
+	public ResponseEntity<List<Employee>> getAllEmployeesTax() {
 		List<Employee> empList = new ArrayList<>();
-		employeeRepository.findAll().forEach(empList::add);
+		
+		employeeRepository.findAll().forEach(calculateTax(sal));
 		return new ResponseEntity<List<Employee>>(empList, HttpStatus.OK);
+	}
+	
+	public double calculateTax(double yearlySalary) {
+	    if (yearlySalary <= 250000) {
+	        return 0; // No tax
+	    } else if (yearlySalary <= 500000) {
+	        return 0.05 * (yearlySalary - 250000);
+	    } else if (yearlySalary <= 1000000) {
+	        return 0.10 * (yearlySalary - 500000) + 12500; 
+	    } else {
+	        return 0.20 * (yearlySalary - 1000000) + 112500; 
+	    }
 	}
 
 	
